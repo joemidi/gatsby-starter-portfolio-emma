@@ -3,7 +3,7 @@ const _ = require('lodash');
 
 exports.onCreateNode = ({ node, boundActionCreators }) => {
   const { createNodeField } = boundActionCreators;
-  let slug;
+  let slug, template;
   if (node.internal.type === 'MarkdownRemark') {
     if (
       Object.prototype.hasOwnProperty.call(node, 'frontmatter') &&
@@ -17,7 +17,10 @@ exports.onCreateNode = ({ node, boundActionCreators }) => {
     ) {
       slug = `/${_.kebabCase(node.frontmatter.title)}`;
     }
+    template = node.frontmatter.template
+
     createNodeField({ node, name: 'slug', value: slug });
+    createNodeField({ node, name: 'template', value: template });
   }
 };
 
@@ -25,7 +28,7 @@ exports.createPages = ({ graphql, boundActionCreators }) => {
   const { createPage } = boundActionCreators;
 
   return new Promise((resolve, reject) => {
-    const projectPage = path.resolve('src/templates/project.jsx');
+    // const projectPage = path.resolve('src/templates/project.jsx');
     resolve(
       graphql(`
         {
@@ -34,6 +37,7 @@ exports.createPages = ({ graphql, boundActionCreators }) => {
               node {
                 fields {
                   slug
+                  template
                 }
               }
             }
@@ -49,7 +53,7 @@ exports.createPages = ({ graphql, boundActionCreators }) => {
         result.data.projects.edges.forEach(edge => {
           createPage({
             path: edge.node.fields.slug,
-            component: projectPage,
+            component: path.resolve(`src/templates/${edge.node.fields.template}.jsx`),
             context: {
               slug: edge.node.fields.slug,
             },
