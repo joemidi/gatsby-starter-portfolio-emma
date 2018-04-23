@@ -50,7 +50,8 @@
   "scripts": {
     "build": "gatsby build",
     "dev": "gatsby develop -o",
-    "postinstall": "node ./bin/hello.js"
+    "postinstall": "node ./bin/hello.js",
+    "deploy": "gatsby build --prefix-paths && gh-pages -d public"
   },
   "devDependencies": {
     "autoprefixer": "^8.0.0",
@@ -63,6 +64,7 @@
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-prettier": "^2.6.0",
     "eslint-plugin-react": "^7.7.0",
+    "gh-pages": "^1.1.0",
     "lodash": "^4.17.5",
     "prettier": "^1.11.0",
     "rucksack-css": "^1.0.2"
